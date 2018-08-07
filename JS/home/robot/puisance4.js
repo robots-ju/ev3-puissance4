@@ -2,7 +2,42 @@
         //demarrage//
 var ev3dev = require('ev3dev-lang');
 console.log("Ready");
+const net = require('net');
 
+
+        //Serveur//
+
+const socket = net.createServer(function(client) {
+  console.log("Client connect");
+
+  client.on('end', function () {
+    console.log('Client disconnect');
+  });
+
+  client.on("data", function (buffer) {
+    console.log('Reçu', buffer);
+
+    if (buffer.length !== 1) {
+      console.log('Buffer pas valide !');
+
+      return;
+    }
+
+    console.log(buffer.readUInt8(0));
+    avancerLeRobot(buffer.readUInt8(0));
+    tomberPiece();
+    retournerBase();
+    client.write(new Buffer([0x01]));
+  });
+});
+
+socket.listen(8953, function () {
+  console.log("Socket ready !!");
+});
+
+socket.on('error', function (error) {
+  throw error;
+});
         //Création des moteurs//
 
 var mA = new ev3dev.LargeMotor(ev3dev.OUTPUT_A);
@@ -11,6 +46,8 @@ var mB = new ev3dev.MediumMotor(ev3dev.OUTPUT_B);
         //Création des moteurs//
 
 var t1 = new ev3dev.TouchSensor(ev3dev.INPUT_2);
+var t2 = new ev3dev.TouchSensor(ev3dev.INPUT_4);
+
 
         //Blocage des moteurs//
 
@@ -20,7 +57,7 @@ mA.setStopAction("hold");
 
 const speedA = 500;
 const rotationsColones = 175;
-  var finPartie = false;
+var finPartie = false;
 
         //Function sleep//
 
@@ -77,10 +114,9 @@ function retournerBase() {
     }
   }
 }
-
-while(true) {
-  avancerLeRobot(6);
-  sleep(500);
-  tomberPiece();
-  retournerBase();
-}
+/*while (true){
+  if (t2.isPressed) {
+    retournerBase();
+    break;
+  }
+}*/
