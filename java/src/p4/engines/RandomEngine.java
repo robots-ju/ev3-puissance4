@@ -9,7 +9,6 @@ import p4.Piece;
 public class RandomEngine implements Engine {
 	private static final Random rand = new Random();
 
-	@Override
 	public int play(Grid grid) {
 		int possibles = 0;
 		for(int x = 0; x < Grid.WIDTH; x++) {
