@@ -25,7 +25,7 @@ public class GridCamera implements Runnable {
 	final int STARTY = 60;
 	final int TRESHOLD_DETECT = 120;
 	final int STEP_SIZE = 2;
-	final int DEVICE_NUMBER = 0;
+	final int DEVICE_NUMBER = 2;
 
 	CanvasFrame canvasPrev = new CanvasFrame("Prev");
 	CanvasFrame canvasDiff = new CanvasFrame("Diff");

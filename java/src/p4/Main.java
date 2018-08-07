@@ -8,6 +8,7 @@ public class Main {
 	public static GridCamera camera;
 	
 	public static void main(String args[]) {
+		RobotController.connect();
 		camera = new GridCamera();
 		Thread thread = new Thread(camera);
 		thread.start();

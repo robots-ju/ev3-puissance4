@@ -65,9 +65,16 @@ public class Window extends Application {
 						
 						int computerMove = engine.play(grid);
 						
+						
 						RobotController.playAt(computerMove);
 						grid.computerPlay(computerMove);
 						panel.update(grid);
+						Main.camera.takeReferencePicture();
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
 					}
 				}
 				System.exit(1);
