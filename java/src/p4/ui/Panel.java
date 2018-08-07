@@ -32,7 +32,7 @@ public class Panel extends Group {
 		this.getChildren().add(frameReset);
 	}
 
-	public void update(Grid grid) {
+	public void update(final Grid grid) {
 		Platform.runLater(new Runnable() {
 			public void run() {
 				gc.setFill(Color.GRAY);

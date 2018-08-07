@@ -17,12 +17,12 @@ public class Window extends Application {
 	
 	
 	@Override
-	public void start(Stage primaryStage) {
+	public void start(final Stage primaryStage) {
 		Group root = new Group();
 		Scene scene = new Scene(root, 1280, 720);
 		scene.setFill(Color.rgb(191, 191, 191));
 
-		Panel panel = new Panel();
+		final Panel panel = new Panel();
 		root.getChildren().add(panel);
 
 		primaryStage.setScene(scene);
