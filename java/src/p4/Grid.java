@@ -8,7 +8,7 @@ public class Grid {
 	
 	private Piece grid[][] = new Piece[WIDTH][HEIGHT];
 	private boolean computerTurn = false;
-	//c'est inutile, vraiment
+
 	public Grid() {
 		for(int x = 0; x < WIDTH; x++) {
 			for(int y = 0; y < HEIGHT; y++) {
