@@ -1,0 +1,36 @@
+apply plugin: "java"
+apply plugin: "eclipse"
+
+archivesBaseName = "ev3-puissance4"
+version = "0.1"
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/']
+        }
+    }
+}
+
+jar {
+	into "resources", {
+		from "src/resources"
+	}
+	manifest {
+		attributes(
+			"Implementation-Title": "ev3-puissance4",
+			"Implementation-Version": version,
+			"Main-Class": "p4.Main"
+		)
+	}
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+	compile group: 'org.bytedeco', name: 'javacv-platform', version: '1.4.2'
+}
