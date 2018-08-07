@@ -16,6 +16,7 @@ import org.bytedeco.javacv.OpenCVFrameConverter;
 import org.bytedeco.javacv.OpenCVFrameGrabber;
 
 import p4.Grid;
+import p4.ui.Window;
 
 public class GridCamera implements Runnable {
 	final int INTERVAL = 100;
@@ -83,33 +84,49 @@ public class GridCamera implements Runnable {
 				areaImg = new Mat(nextImg.clone());
 
 				int avgCount = 0;
-				
+
 				for (int gridX = 0; gridX < Grid.WIDTH; gridX++) {
 					for (int gridY = 0; gridY < Grid.HEIGHT; gridY++) {
+						Scalar color = Scalar.RED;
+						boolean detected = false;
+						double avg = 0;
+
+						// Centre du cadre de détection
 						int positionX = STARTX + gridX * ESPACEX;
 						int positionY = STARTY + gridY * ESPACEY;
 
-						int total = 0;
-						avgCount = 0;
+						// Coordonnées dans l'objet représentant la partie
+						// La grille est indexée depuis le bas donc on inverse Y
+						int gridReferenceX = gridX;
+						int gridReferenceY = Grid.HEIGHT - 1 - gridY;
 
-						for (int pixelX = positionX - AVG_SQUARE_SIZE; pixelX <= positionX
-								+ AVG_SQUARE_SIZE; pixelX += STEP_SIZE) {
+						if (Window.grid.canPlacePieceAt(gridReferenceX,
+								gridReferenceY)) {
 
-							for (int pixelY = positionY - AVG_SQUARE_SIZE; pixelY <= positionY
-									+ AVG_SQUARE_SIZE; pixelY += STEP_SIZE) {
-								CvScalar pixel = cvGet2D(diffImg, pixelY,
-										pixelX);
-								total += pixel.getVal(0) + pixel.getVal(1)
-										+ pixel.getVal(2);
-								avgCount++;
+							color = Scalar.BLUE;
+
+							int total = 0;
+							avgCount = 0;
+
+							for (int pixelX = positionX - AVG_SQUARE_SIZE; pixelX <= positionX
+									+ AVG_SQUARE_SIZE; pixelX += STEP_SIZE) {
+
+								for (int pixelY = positionY - AVG_SQUARE_SIZE; pixelY <= positionY
+										+ AVG_SQUARE_SIZE; pixelY += STEP_SIZE) {
+									CvScalar pixel = cvGet2D(diffImg, pixelY,
+											pixelX);
+									total += pixel.getVal(0) + pixel.getVal(1)
+											+ pixel.getVal(2);
+									avgCount++;
+								}
+							}
+
+							if (avgCount > 0) {
+								avg = total / avgCount;
+
+								detected = avg > TRESHOLD_DETECT;
 							}
 						}
-
-						double avg = avgCount > 0 ? total / avgCount : 0;
-
-						Scalar color = Scalar.BLUE;
-
-						boolean detected = avg > TRESHOLD_DETECT;
 
 						if (detected) {
 							color = Scalar.GREEN;
@@ -131,8 +148,9 @@ public class GridCamera implements Runnable {
 					}
 				}
 
-				putText(areaImg, "Echantillons par carre: " + Double.toString(avgCount), new Point(5,diffImg.height() - 5), 1, 1,
-						Scalar.BLUE);
+				putText(areaImg,
+						"Echantillons par carre: " + Double.toString(avgCount),
+						new Point(5, diffImg.height() - 5), 1, 1, Scalar.BLUE);
 
 				canvasPrev.showImage(converter.convert(prevImg));
 				canvasDiff.showImage(converter.convert(diffImg));

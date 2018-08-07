@@ -96,4 +96,8 @@ public class Grid {
 	public boolean gameFinished() {
 		return playerWin() || computerWin() || gameFull();
 	}
+	
+	public boolean canPlacePieceAt(int x, int y) {
+		return grid[x][y] == Piece.EMPTY && (y == 0 || grid[x][y - 1] != Piece.EMPTY);
+	}
 }
