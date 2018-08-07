@@ -18,19 +18,21 @@ import org.bytedeco.javacv.OpenCVFrameGrabber;
 import p4.Grid;
 
 public class GridCamera implements Runnable {
-	final int INTERVAL = 1000;
+	final int INTERVAL = 100;
 	final int ESPACEX = 83;
 	final int STARTX = 95;
 	final int STARTY = 60;
 	final int TRESHOLD_DETECT = 120;
+	final int STEP_SIZE = 2;
+	final int DEVICE_NUMBER = 0;
 
 	CanvasFrame canvasPrev = new CanvasFrame("Prev");
 	CanvasFrame canvasDiff = new CanvasFrame("Diff");
 	CanvasFrame canvasArea = new CanvasFrame("Area");
 
-	boolean takeReferencePicture = false;
+	protected boolean takeReferencePicture = false;
 
-	boolean gridStatus[][] = new boolean[Grid.WIDTH][Grid.HEIGHT];
+	protected boolean gridStatus[][] = new boolean[Grid.WIDTH][Grid.HEIGHT];
 
 	public GridCamera() {
 		canvasPrev.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
@@ -49,7 +51,7 @@ public class GridCamera implements Runnable {
 	}
 
 	public void run() {
-		OpenCVFrameGrabber grabber = new OpenCVFrameGrabber(2);
+		OpenCVFrameGrabber grabber = new OpenCVFrameGrabber(DEVICE_NUMBER);
 		OpenCVFrameConverter.ToIplImage converter = new OpenCVFrameConverter.ToIplImage();
 		IplImage prevImg = null;
 		IplImage nextImg;
@@ -80,29 +82,30 @@ public class GridCamera implements Runnable {
 
 				areaImg = new Mat(nextImg.clone());
 
+				int avgCount = 0;
+				
 				for (int gridX = 0; gridX < Grid.WIDTH; gridX++) {
 					for (int gridY = 0; gridY < Grid.HEIGHT; gridY++) {
 						int positionX = STARTX + gridX * ESPACEX;
 						int positionY = STARTY + gridY * ESPACEY;
 
 						int total = 0;
-						int count = 0;
+						avgCount = 0;
 
 						for (int pixelX = positionX - AVG_SQUARE_SIZE; pixelX <= positionX
-								+ AVG_SQUARE_SIZE; pixelX++) {
+								+ AVG_SQUARE_SIZE; pixelX += STEP_SIZE) {
 
 							for (int pixelY = positionY - AVG_SQUARE_SIZE; pixelY <= positionY
-									+ AVG_SQUARE_SIZE; pixelY++) {
+									+ AVG_SQUARE_SIZE; pixelY += STEP_SIZE) {
 								CvScalar pixel = cvGet2D(diffImg, pixelY,
 										pixelX);
 								total += pixel.getVal(0) + pixel.getVal(1)
 										+ pixel.getVal(2);
-								count++;
+								avgCount++;
 							}
-
 						}
 
-						double avg = count > 0 ? total / count : 0;
+						double avg = avgCount > 0 ? total / avgCount : 0;
 
 						Scalar color = Scalar.BLUE;
 
@@ -127,6 +130,9 @@ public class GridCamera implements Runnable {
 						gridStatus[gridX][Grid.HEIGHT - 1 - gridY] = detected;
 					}
 				}
+
+				putText(areaImg, "Echantillons par carre: " + Double.toString(avgCount), new Point(5,diffImg.height() - 5), 1, 1,
+						Scalar.BLUE);
 
 				canvasPrev.showImage(converter.convert(prevImg));
 				canvasDiff.showImage(converter.convert(diffImg));
