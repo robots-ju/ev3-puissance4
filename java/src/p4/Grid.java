@@ -4,6 +4,8 @@ public class Grid {
 	public static final int WIDTH = 7;
 	public static final int HEIGHT = 6;
 	
+	public static final int LINE_SIZE = 4;
+	
 	private Piece grid[][] = new Piece[WIDTH][HEIGHT];
 	private boolean computerTurn = false;
 	//c'est inutile, vraiment
@@ -47,28 +49,28 @@ public class Grid {
 	
 	public boolean playerWin() {
 		for(int x = 0; x < WIDTH; x++) {
-			for(int y = 0; y < 3; y++) {
+			for(int y = 0; y < HEIGHT - LINE_SIZE + 1; y++) {
 				int count = 0;
-				for(int line = y; line < 4 + y; line++) {
+				for(int line = y; line < LINE_SIZE + y; line++) {
 					if(grid[x][line] == Piece.PLAYER) {
 						count++;
 					}
 				}
-				if(count == 4) {
+				if(count == LINE_SIZE) {
 					return true;
 				}
 			}
 		}
 		
 		for(int y = 0; y < HEIGHT; y++) {
-			for(int x = 0; x < 4; x++) {
+			for(int x = 0; x < WIDTH - LINE_SIZE + 1; x++) {
 				int count = 0;
-				for(int line = x; line < x + 4; line++) {
+				for(int line = x; line < x + LINE_SIZE; line++) {
 					if(grid[line][y] == Piece.PLAYER) {
 						count++;
 					}
 				}
-				if(count == 4) {
+				if(count == LINE_SIZE) {
 					return true;
 				}
 			}

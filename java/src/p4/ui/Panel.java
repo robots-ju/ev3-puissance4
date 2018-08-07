@@ -9,6 +9,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import p4.Engine;
 import p4.Grid;
+import p4.Main;
 import p4.Piece;
 import p4.engines.RandomEngine;
 
@@ -21,7 +22,18 @@ public class Panel extends Group {
 		this.getChildren().add(canvas);
 		gc = canvas.getGraphicsContext2D();
 		
-		Rectangle buttons[] = new Rectangle[7];
+		Rectangle frameReset = new Rectangle(1200, 100, 50, 50);
+		frameReset.setFill(Color.RED);
+		
+		frameReset.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent e) {
+				Main.camera.takeReferencePicture();
+			}
+		});
+		
+		this.getChildren().add(frameReset);
+		
+		Rectangle buttons[] = new Rectangle[Grid.WIDTH];
 		
 		for(int n = 0; n < buttons.length; n++) {
 			buttons[n] = new Rectangle();
@@ -52,7 +64,7 @@ public class Panel extends Group {
 		gc.fillRect(0, 0, 1280, 720);
 		for(int x = 0; x < Grid.WIDTH; x++) {
 			for(int y = 0; y < Grid.HEIGHT; y++) {
-				Piece piece = grid.get(x, 5 - y);
+				Piece piece = grid.get(x, Grid.HEIGHT - 1 - y);
 				
 				if(piece == Piece.COMPUTER) {
 					gc.setFill(Color.RED);

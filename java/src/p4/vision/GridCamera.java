@@ -49,7 +49,7 @@ public class GridCamera implements Runnable {
 	}
 
 	public void run() {
-		OpenCVFrameGrabber grabber = new OpenCVFrameGrabber(0);
+		OpenCVFrameGrabber grabber = new OpenCVFrameGrabber(2);
 		OpenCVFrameConverter.ToIplImage converter = new OpenCVFrameConverter.ToIplImage();
 		IplImage prevImg = null;
 		IplImage nextImg;
@@ -71,6 +71,7 @@ public class GridCamera implements Runnable {
 
 				if (prevImg == null || takeReferencePicture) {
 					prevImg = nextImg.clone();
+					takeReferencePicture = false;
 				}
 
 				diffImg = nextImg.clone();

@@ -5,8 +5,10 @@ import p4.ui.Window;
 import p4.vision.GridCamera;
 
 public class Main {
+	public static GridCamera camera;
+	
 	public static void main(String args[]) {
-		GridCamera camera = new GridCamera();
+		camera = new GridCamera();
 		Thread thread = new Thread(camera);
 		thread.start();
 
