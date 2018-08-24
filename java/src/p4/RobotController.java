@@ -1,7 +1,5 @@
 package p4;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -11,9 +9,9 @@ import java.net.UnknownHostException;
 public class RobotController {
 	public static final String IP = "192.168.2.70";
 	public static final int PORT = 8953;
-	
+
 	private static Socket socket;
-	
+
 	public static void connect() {
 		try {
 			socket = new Socket(IP, PORT);
@@ -23,7 +21,7 @@ public class RobotController {
 			e.printStackTrace();
 		}
 	}
-	            
+
 	public static void playAt(int pos) {
 		try {
 			OutputStream os = socket.getOutputStream();
@@ -32,10 +30,9 @@ public class RobotController {
 			os.write(pos);
 
 			System.out.println("Mouvement envoyé");
-			
+
 			is.read();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

@@ -19,16 +19,16 @@ public class Panel extends Group {
 		Canvas canvas = new Canvas(1280, 720);
 		this.getChildren().add(canvas);
 		gc = canvas.getGraphicsContext2D();
-		
+
 		Rectangle frameReset = new Rectangle(1200, 100, 50, 50);
 		frameReset.setFill(Color.RED);
-		
+
 		frameReset.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent e) {
 				Main.camera.takeReferencePicture();
 			}
 		});
-		
+
 		this.getChildren().add(frameReset);
 	}
 
@@ -37,18 +37,18 @@ public class Panel extends Group {
 			public void run() {
 				gc.setFill(Color.GRAY);
 				gc.fillRect(0, 0, 1280, 720);
-				for(int x = 0; x < Grid.WIDTH; x++) {
-					for(int y = 0; y < Grid.HEIGHT; y++) {
+				for (int x = 0; x < Grid.WIDTH; x++) {
+					for (int y = 0; y < Grid.HEIGHT; y++) {
 						Piece piece = grid.get(x, Grid.HEIGHT - 1 - y);
-						
-						if(piece == Piece.COMPUTER) {
+
+						if (piece == Piece.COMPUTER) {
 							gc.setFill(Color.RED);
-						} else if(piece == Piece.PLAYER) {
+						} else if (piece == Piece.PLAYER) {
 							gc.setFill(Color.BLUE);
 						} else {
 							gc.setFill(Color.WHITE);
 						}
-						
+
 						gc.fillOval(100 + x * 100, 100 + y * 100, 75, 75);
 					}
 				}

@@ -14,8 +14,7 @@ import p4.engines.RandomEngine;
 public class Window extends Application {
 	public static final Grid grid = new Grid();
 	private Engine engine = new RandomEngine();
-	
-	
+
 	@Override
 	public void start(final Stage primaryStage) {
 		Group root = new Group();
@@ -29,43 +28,42 @@ public class Window extends Application {
 		primaryStage.setResizable(false);
 		primaryStage.setTitle("Puissance4");
 		primaryStage.show();
-		
+
 		panel.update(grid);
-		
+
 		Thread t = new Thread() {
 			public void run() {
-				while(primaryStage.isShowing()) {
+				while (primaryStage.isShowing()) {
 					try {
 						Thread.sleep(100);
-					} catch(InterruptedException e) {
-						
+					} catch (InterruptedException e) {
+
 					}
-					
+
 					boolean changes[][] = Main.camera.gridStatus();
-					
+
 					int changesCount = 0;
-					
+
 					int pos = 0;
-					
-					for(int x = 0; x < Grid.WIDTH; x++) {
-						for(int y = 0; y < Grid.HEIGHT; y++) {
-							if(changes[x][y]) {
+
+					for (int x = 0; x < Grid.WIDTH; x++) {
+						for (int y = 0; y < Grid.HEIGHT; y++) {
+							if (changes[x][y]) {
 								pos = x;
 
 								changesCount++;
 							}
 						}
 					}
-					
-					if(changesCount > 1) {
+
+					if (changesCount > 1) {
 						System.out.println("Erreur plusieurs points détectés");
-					} else if(changesCount == 1) {
+					} else if (changesCount == 1) {
 						Window.grid.playerPlay(pos);
 						panel.update(grid);
-						
+
 						int computerMove = engine.play(grid);
-						
-						
+
 						RobotController.playAt(computerMove);
 						grid.computerPlay(computerMove);
 						panel.update(grid);
@@ -80,7 +78,7 @@ public class Window extends Application {
 				System.exit(1);
 			}
 		};
-		
+
 		t.start();
 	}
 }
