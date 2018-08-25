@@ -41,6 +41,7 @@ socket.listen(8953, function () {
 socket.on('error', function (error) {
     throw error;
 });
+
 //Création des moteurs//
 
 var mA = new ev3dev.LargeMotor(ev3dev.OUTPUT_A);
@@ -95,7 +96,7 @@ function tomberPiece() {
 
     sleep(2000);
 
-    mB.runToPosition(-635, 480);
+    mB.runToPosition(0, 480);
 
     console.log("PION !!");
 
@@ -109,14 +110,19 @@ function calculPositionColone(colone) {
 }
 
 function retournerBase() {
-    while (!t1.isPressed) {
-        mA.runForever(-200);
+    console.log("Je retourne à la base");
 
-        console.log("Je retourne à la base");
+    mA.runForever(-200);
 
+    while (true) {
         if (t1.isPressed) {
             mA.stop();
             mA.reset();
+
+            break;
         }
     }
 }
+
+// Commencer par s'aligner avec la base
+retournerBase();
