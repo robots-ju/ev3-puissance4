@@ -40,6 +40,10 @@ public class Window extends Application {
 
 					}
 
+					if (Window.grid.gameFinished()) {
+						continue;
+					}
+
 					boolean changes[][] = Main.camera.gridStatus();
 
 					int changesCount = 0;
@@ -59,14 +63,23 @@ public class Window extends Application {
 					if (changesCount > 1) {
 						System.out.println("Erreur plusieurs points détectés");
 					} else if (changesCount == 1) {
-						Window.grid.playerPlay(pos);
+						grid.playerPlay(pos);
 						panel.update(grid);
+
+						if (grid.gameFinished()) {
+							continue;
+						}
 
 						int computerMove = engine.play(grid);
 
 						RobotController.playAt(computerMove);
 						grid.computerPlay(computerMove);
 						panel.update(grid);
+
+						if (grid.gameFinished()) {
+							continue;
+						}
+
 						Main.camera.takeReferencePicture();
 						try {
 							Thread.sleep(1000);

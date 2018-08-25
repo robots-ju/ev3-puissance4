@@ -25,7 +25,8 @@ public class GridCamera implements Runnable {
 	final int STARTY = 60;
 	final int TRESHOLD_DETECT = 120;
 	final int STEP_SIZE = 2;
-	final int DEVICE_NUMBER = 2;
+	final int DEVICE_NUMBER = 0;
+	final int WINDOWS_SCREEN_X = 0;
 
 	CanvasFrame canvasPrev = new CanvasFrame("Prev");
 	CanvasFrame canvasDiff = new CanvasFrame("Diff");
@@ -37,10 +38,11 @@ public class GridCamera implements Runnable {
 
 	public GridCamera() {
 		canvasPrev.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
+		canvasPrev.setLocation(WINDOWS_SCREEN_X, 0);
 		canvasDiff.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
-		canvasDiff.setLocation(0, 400);
+		canvasDiff.setLocation(WINDOWS_SCREEN_X, 800);
 		canvasArea.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
-		canvasArea.setLocation(700, 400);
+		canvasArea.setLocation(WINDOWS_SCREEN_X + 800, 300);
 	}
 
 	public void takeReferencePicture() {

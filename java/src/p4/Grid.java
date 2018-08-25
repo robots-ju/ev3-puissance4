@@ -4,7 +4,7 @@ public class Grid {
 	public static final int WIDTH = 7;
 	public static final int HEIGHT = 6;
 
-	public static final int LINE_SIZE = 4;
+	public static final int N_IN_A_ROW_TO_WIN = 4;
 
 	private Piece grid[][] = new Piece[WIDTH][HEIGHT];
 	private boolean computerTurn = false;
@@ -47,30 +47,74 @@ public class Grid {
 		return false;
 	}
 
-	public boolean playerWin() {
+	public boolean isComputerTurn() {
+		return computerTurn;
+	}
+
+	protected boolean winForPiece(Piece piece) {
+		// Lignes verticales
 		for (int x = 0; x < WIDTH; x++) {
-			for (int y = 0; y < HEIGHT - LINE_SIZE + 1; y++) {
+			for (int y = 0; y < HEIGHT - N_IN_A_ROW_TO_WIN + 1; y++) {
 				int count = 0;
-				for (int line = y; line < LINE_SIZE + y; line++) {
-					if (grid[x][line] == Piece.PLAYER) {
+
+				for (int line = y; line < N_IN_A_ROW_TO_WIN + y; line++) {
+					if (grid[x][line] == piece) {
 						count++;
 					}
 				}
-				if (count == LINE_SIZE) {
+
+				if (count == N_IN_A_ROW_TO_WIN) {
 					return true;
 				}
 			}
 		}
 
+		// Lignes horizontales
 		for (int y = 0; y < HEIGHT; y++) {
-			for (int x = 0; x < WIDTH - LINE_SIZE + 1; x++) {
+			for (int x = 0; x < WIDTH - N_IN_A_ROW_TO_WIN + 1; x++) {
 				int count = 0;
-				for (int line = x; line < x + LINE_SIZE; line++) {
-					if (grid[line][y] == Piece.PLAYER) {
+
+				for (int line = x; line < x + N_IN_A_ROW_TO_WIN; line++) {
+					if (grid[line][y] == piece) {
 						count++;
 					}
 				}
-				if (count == LINE_SIZE) {
+
+				if (count == N_IN_A_ROW_TO_WIN) {
+					return true;
+				}
+			}
+		}
+
+		// Lignes diagonales "/"
+		for (int x = 0; x < WIDTH - N_IN_A_ROW_TO_WIN + 1; x++) {
+			for (int y = 0; y < HEIGHT - N_IN_A_ROW_TO_WIN + 1; y++) {
+				int count = 0;
+
+				for (int n = 0; n < N_IN_A_ROW_TO_WIN; n++) {
+					if (grid[x + n][y + n] == piece) {
+						count++;
+					}
+				}
+
+				if (count == N_IN_A_ROW_TO_WIN) {
+					return true;
+				}
+			}
+		}
+
+		// Lignes diagonales "\"
+		for (int x = N_IN_A_ROW_TO_WIN - 1; x < WIDTH; x++) {
+			for (int y = 0; y < HEIGHT - N_IN_A_ROW_TO_WIN + 1; y++) {
+				int count = 0;
+
+				for (int n = 0; n < N_IN_A_ROW_TO_WIN; n++) {
+					if (grid[x - n][y + n] == piece) {
+						count++;
+					}
+				}
+
+				if (count == N_IN_A_ROW_TO_WIN) {
 					return true;
 				}
 			}
@@ -79,9 +123,12 @@ public class Grid {
 		return false;
 	}
 
-	public boolean computerWin() {
+	public boolean playerWin() {
+		return winForPiece(Piece.PLAYER);
+	}
 
-		return false;
+	public boolean computerWin() {
+		return winForPiece(Piece.COMPUTER);
 	}
 
 	public boolean gameFull() {
